@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catálogo de Películas</title>
+  <title>Inicio | PelículasApp</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body class="bg-light">
@@ -16,112 +16,28 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-          <li class="nav-item"><a class="nav-link active" href="catalogo.html">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="catalogo.html">Catálogo</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
   <!-- Contenido principal -->
-  <div class="container py-5">
-    <h1 class="text-center mb-4">Catálogo de Películas</h1>
-
-    <div class="mb-3 d-flex justify-content-between">
-      <input type="text" id="searchInput" class="form-control w-75 me-3" placeholder="Buscar por título...">
-      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#movieModal">Agregar Película</button>
-    </div>
-
-    <table class="table table-bordered table-hover">
-      <thead class="table-dark">
-        <tr>
-          <th>Portada</th>
-          <th>Título</th>
-          <th>Descripción</th>
-          <th>Año</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="movieTableBody"></tbody>
-    </table>
+  <div class="container py-5 text-center">
+    <h1 class="mb-4">Bienvenido a PelículasApp 🎬</h1>
+    <p class="lead">
+      Esta es una aplicación web diseñada para gestionar un catálogo de películas.
+      Puedes consultar la lista de títulos, ver los detalles, editar información o agregar nuevas películas.
+      Todo está conectado con Firebase Firestore y puedes trabajar con imágenes mediante URLs.
+    </p>
+    <a href="catalogo.html" class="btn btn-primary btn-lg mt-4">Ir al Catálogo</a>
   </div>
 
-  <!-- Modal Agregar/Editar -->
-  <div class="modal fade" id="movieModal" tabindex="-1" aria-labelledby="movieModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="movieForm">
-          <div class="modal-header">
-            <h5 class="modal-title" id="movieModalLabel">Agregar / Editar Película</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <input type="hidden" id="movieId" />
-            <div class="mb-3">
-              <label for="title" class="form-label">Título</label>
-              <input type="text" id="title" class="form-control" required />
-            </div>
-            <div class="mb-3">
-              <label for="description" class="form-label">Descripción</label>
-              <input type="text" id="description" class="form-control" required />
-            </div>
-            <div class="mb-3">
-              <label for="year" class="form-label">Año</label>
-              <input type="number" id="year" class="form-control" required />
-            </div>
-            <div class="mb-3">
-              <label for="imageUrl" class="form-label">URL de Portada</label>
-              <input type="url" id="imageUrl" class="form-control" placeholder="https://ejemplo.com/portada.jpg" required />
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button class="btn btn-primary" type="submit">Guardar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+  <footer class="text-center mt-5 mb-3 text-muted">
+    © 2025 - PelículasApp. Proyecto académico.
+  </footer>
 
-  <!-- Modal Detalle -->
-  <div class="modal fade" id="detailModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Detalle de Película</h5>
-          <button class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body text-center">
-          <img id="detailImage" src="" class="img-fluid mb-3 rounded" alt="Portada de Película" />
-          <p><strong>Título:</strong> <span id="detailTitle"></span></p>
-          <p><strong>Descripción:</strong> <span id="detailDescription"></span></p>
-          <p><strong>Año:</strong> <span id="detailYear"></span></p>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Confirmar Eliminación -->
-  <div class="modal fade" id="confirmDeleteModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content border-danger">
-        <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title">Confirmar Eliminación</h5>
-          <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">¿Estás seguro de que deseas eliminar esta película?</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script type="module" src="./main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
