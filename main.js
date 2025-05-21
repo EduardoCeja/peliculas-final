@@ -3,17 +3,12 @@ import {
   collection, getDocs, addDoc,
   deleteDoc, doc, updateDoc
 } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js';
-import {
-  getStorage, ref, uploadBytes, getDownloadURL
-} from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js';
-
-const storage = getStorage();
 
 const form = document.getElementById('movieForm');
 const title = document.getElementById('title');
 const description = document.getElementById('description');
 const year = document.getElementById('year');
-//const imageInput = document.getElementById('image');
+const imageUrlInput = document.getElementById('imageUrl');
 const movieId = document.getElementById('movieId');
 const tableBody = document.getElementById('movieTableBody');
 const searchInput = document.getElementById('searchInput');
@@ -35,11 +30,12 @@ window.showDetails = (title, description, year, imageUrl) => {
 };
 
 // Editar
-window.editMovie = (id, titleVal, desc, yr) => {
+window.editMovie = (id, titleVal, desc, yr, imgUrl) => {
   movieId.value = id;
   title.value = titleVal;
   description.value = desc;
   year.value = yr;
+  imageUrlInput.value = imgUrl;
 };
 
 // Eliminar
@@ -60,30 +56,16 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async () =
 // Guardar película
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-      const imageInput = document.getElementById('image'); // 👈 mover aquí si fuera necesario
-  if (!imageInput) {
-    console.error("No se encontró el campo de imagen.");
-    return;
-  }
+
   const data = {
     title: title.value,
     description: description.value,
     year: parseInt(year.value),
-    imageUrl: ''
+    imageUrl: imageUrlInput.value
   };
 
-  // Subir imagen si se seleccionó
-  if (imageInput.files.length > 0) {
-    const file = imageInput.files[0];
-    const imageRef = ref(storage, `peliculas/${Date.now()}_${file.name}`);
-    const snapshot = await uploadBytes(imageRef, file);
-    const url = await getDownloadURL(snapshot.ref);
-    data.imageUrl = url;
-  }
-
   if (movieId.value) {
-    const refDoc = doc(db, 'peliculas', movieId.value);
-    await updateDoc(refDoc, data);
+    await updateDoc(doc(db, 'peliculas', movieId.value), data);
     movieId.value = '';
   } else {
     await addDoc(peliculasRef, data);
@@ -103,6 +85,7 @@ export async function loadMovies() {
     const data = docSnap.data();
     const safeTitle = data.title.replace(/'/g, "\\'");
     const safeDesc = data.description.replace(/'/g, "\\'");
+    const safeImg = data.imageUrl?.replace(/'/g, "\\'") || '';
     const imageCell = data.imageUrl
       ? `<img src="${data.imageUrl}" width="60" class="rounded">`
       : `<span class="text-muted">Sin imagen</span>`;
@@ -112,7 +95,7 @@ export async function loadMovies() {
       <td>${imageCell}</td>
       <td>
         <a href="#" data-bs-toggle="modal" data-bs-target="#detailModal"
-           onclick="showDetails('${safeTitle}', '${safeDesc}', '${data.year}', '${data.imageUrl || ''}')">
+           onclick="showDetails('${safeTitle}', '${safeDesc}', '${data.year}', '${safeImg}')">
           ${data.title}
         </a>
       </td>
@@ -120,14 +103,16 @@ export async function loadMovies() {
       <td>${data.year}</td>
       <td>
         <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#movieModal"
-          onclick="editMovie('${docSnap.id}', '${safeTitle}', '${safeDesc}', ${data.year})">Editar</button>
+          onclick="editMovie('${docSnap.id}', '${safeTitle}', '${safeDesc}', ${data.year}, '${safeImg}')">
+          Editar
+        </button>
         <button class="btn btn-sm btn-danger" onclick="deleteMovie('${docSnap.id}')">Eliminar</button>
       </td>`;
     tableBody.appendChild(row);
   });
 }
 
-// Buscar
+// Búsqueda
 searchInput.addEventListener('input', () => {
   const term = searchInput.value.toLowerCase();
   Array.from(tableBody.children).forEach(row => {
